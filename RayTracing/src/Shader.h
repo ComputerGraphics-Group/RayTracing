@@ -2,6 +2,7 @@
 #include <string>
 #include <unordered_map>
 #include "external/glm/glm.hpp"
+#include "external/glm/gtc/type_ptr.hpp"
 
 /// Holds the source files for the shaders.
 /// 

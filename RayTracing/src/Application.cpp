@@ -19,6 +19,8 @@
 #include "VertexBufferLayout.h"
 #include "Shader.h"
 #include "Renderer.h"
+#include "Camera.h"
+
 
 bool printed_error;
 void GLAPIENTRY
@@ -40,6 +42,32 @@ MessageCallback(GLenum source,
 
 }
 
+void MouseCallback(GLFWwindow* window, double xpos, double ypos);
+
+void ScrollCallback(GLFWwindow* window, double dx, double dy);
+
+//Window
+int width = 1000;
+int height = 1000;
+
+//Imgui controls
+float lightPos[3] = { 9,25,262 };
+
+//timing
+float dT = 0.0f;
+float lastFrame = 0.0f;
+
+//camera
+Camera cam(glm::vec3(0,0,500),glm::vec3(0,1,0));
+float lastX = width / 2;
+float lastY = height / 2;
+bool firstMouse = true;
+bool isMovementEnabled = true;
+
+void Drawstuff(Shader*);
+void ImGUIsetup(void);
+void ProcessInput(GLFWwindow*);
+
 /// The driving function of the program.
 /// 
 /// This function initialises OpenGL windows, sets up the Array Buffer and assigns the provided data into it, sets up the shaders
@@ -54,7 +82,7 @@ int main(void)
 
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1000, 1000, "Bresenham's line drawing", NULL, NULL);
+    window = glfwCreateWindow(1000, 1000, "Raytracing", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -73,6 +101,9 @@ int main(void)
 
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(MessageCallback, NULL);
+    glfwSetCursorPosCallback(window, MouseCallback);
+    glfwSetScrollCallback(window, ScrollCallback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
@@ -147,12 +178,10 @@ int main(void)
     IndexBuffer ib(indices, 12*3);
 
     Shader shader("res/shaders/basic.shader");
-    shader.bind();
 
     va.unbind();
     vb.unbind();
     ib.unbind();
-    shader.unbind();
 
     Renderer renderer;
 
@@ -163,51 +192,20 @@ int main(void)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
-    glm::vec3 translationA(0, 0, 0);
-    float angle_of_rotation[3] = { 0, 0, 0 };
-    float lightPos[3] = { 9,25,262 };
-    glm::mat4 model;
-    glm::mat4 view;
-    glm::mat4 projection;
-    glm::mat4 mvp;
+    glEnable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(window))
     {
         renderer.clear();
         glfwPollEvents();
 
+        Drawstuff(&shader);
         shader.bind();
-        shader.setUniform4f("u_color", 1.0, 1.0f, 0.0f, 1.0f);
-        shader.setUniform3f("light_pos", lightPos[0], lightPos[1], lightPos[2]);
-
-        model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-        model = glm::translate(model, translationA);
-        model = glm::rotate(model, angle_of_rotation[0], glm::vec3(1, 0, 0));
-        model = glm::rotate(model, angle_of_rotation[1], glm::vec3(0, 1, 0));
-        model = glm::rotate(model, angle_of_rotation[2], glm::vec3(0, 0, 1));
-        view = glm::translate(glm::mat4(1.0), glm::vec3(0, 0, -500));
-        projection = glm::perspective(0.78f, 1.0f, 50.0f, 1000.0f);
-        shader.setUniformMat4f("model", model);
-        shader.setUniformMat4f("view", view);
-        shader.setUniformMat4f("projection", projection);
-        glEnable(GL_DEPTH_TEST);
         renderer.draw(va, ib, shader);
-        
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
 
-        {
-            ImGui::Begin("Testing");
-            ImGui::SliderFloat3("Translation", &translationA.x, -500.0f, 500.0f);
-            ImGui::SliderFloat3("Rotaion", angle_of_rotation, -3.14f, 3.14f);
-            ImGui::SliderFloat3("Light position", lightPos, -500.0f, 500.0f);
-            ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-            ImGui::End();
-        }
+        ImGUIsetup();
 
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        ProcessInput(window);
 
         glfwSwapBuffers(window);
     }
@@ -219,4 +217,77 @@ int main(void)
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
+}
+
+void Drawstuff(Shader *shader) {
+    glm::mat4 model;
+    glm::mat4 view;
+    glm::mat4 projection;
+
+    shader->setUniform4f("u_color", 1.0, 1.0f, 0.0f, 1.0f);
+    shader->setUniform3f("light_pos", lightPos[0], lightPos[1], lightPos[2]);
+
+    model = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    view = cam.GetViewMatrix();
+    projection = glm::perspective(radians(cam.Zoom), (float)width/(float)height, 50.0f, 1000.0f);
+
+    shader->setUniformMat4f("model", model);
+    shader->setUniformMat4f("view", view);
+    shader->setUniformMat4f("projection", projection);
+}
+
+void ProcessInput(GLFWwindow *window) {
+    dT = glfwGetTime() - lastFrame;
+    lastFrame = glfwGetTime();
+
+    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
+        isMovementEnabled = !isMovementEnabled;
+        if(isMovementEnabled) glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        else glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cam.ProcessKeyboard(Camera_Movement::FORWARD, dT);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cam.ProcessKeyboard(Camera_Movement::BACKWARD, dT);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cam.ProcessKeyboard(Camera_Movement::LEFT, dT);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cam.ProcessKeyboard(Camera_Movement::RIGHT, dT);
+
+}
+
+void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
+    if (firstMouse) {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+    float dx = xpos - lastX;
+    float dy = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    if(isMovementEnabled)
+        cam.ProcessMouseMovement(dx, dy);
+}
+
+void ScrollCallback(GLFWwindow* window, double dx, double dy) {
+    cam.ProcessMouseScroll(dy);
+}
+
+void ImGUIsetup() {
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+
+    {
+        ImGui::Begin("Testing");
+        ImGui::SliderFloat3("Light position", lightPos, -500.0f, 500.0f);
+        ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+        ImGui::End();
+    }
+
+    ImGui::Render();
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
