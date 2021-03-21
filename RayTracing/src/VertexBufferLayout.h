@@ -4,9 +4,19 @@
 
 struct VertexBufferElement
 {
-	unsigned int count;
 	unsigned int type;
+	unsigned int count;
 	unsigned char normalized;
+
+	static unsigned int getSizeOfType(unsigned int type)
+	{
+		switch (type)
+		{
+		case GL_FLOAT: return sizeof(GL_FLOAT);
+		case GL_UNSIGNED_INT: return sizeof(GL_UNSIGNED_INT);
+		case GL_UNSIGNED_BYTE: return sizeof(GL_UNSIGNED_BYTE);
+		}
+	}
 };
 
 class VertexBufferLayout

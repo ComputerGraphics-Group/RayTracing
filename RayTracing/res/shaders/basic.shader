@@ -1,7 +1,8 @@
 #shader vertex
 #version 330 core
 
-layout(location = 0) in vec3 aPosition;layout(location = 1) in vec3 aNormal;
+layout(location = 0) in vec3 aPosition;
+layout(location = 1) in vec3 aNormal;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -33,6 +34,6 @@ in vec3 frag_pos;
 void main()
 {
     float diff = max( dot(normalize(normal), (normalize(light_pos - frag_pos)) ) , 0.0);
-    color = u_color * diff;
- //   color = u_color;
+//    color = u_color * diff;
+    color = u_color;
 };
