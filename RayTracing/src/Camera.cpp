@@ -8,6 +8,7 @@ Camera::Camera(vec3 position = vec3(0, 0, 0), vec3 up = vec3(0, 1, 0)) {
 	MovementSpeed = speed;
 	MouseSensitivity = sensitivity;
 	Zoom = zoom;
+	IsPanning = false;
 	updateCameraVectors();
 }
 
@@ -46,6 +47,11 @@ void Camera::ProcessMouseScroll(float dy) {
 	Zoom -= dy;
 	if (Zoom < 1.0f) Zoom = 1.0f;
 	if (Zoom > 45.0f) Zoom = 45.0f;
+}
+
+void Camera::ProcessMousePan(float dx, float dy) {
+	Position -= Right * dx;
+	Position -= Up * dy;
 }
 
 void Camera::SendPosition() {

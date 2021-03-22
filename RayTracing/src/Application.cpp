@@ -46,6 +46,8 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 
 void ScrollCallback(GLFWwindow* window, double dx, double dy);
 
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+
 //Window
 int width = 1000;
 int height = 1000;
@@ -62,7 +64,8 @@ Camera cam(glm::vec3(0,0,500),glm::vec3(0,1,0));
 float lastX = width / 2;
 float lastY = height / 2;
 bool firstMouse = true;
-bool isMovementEnabled = true;
+bool isMovementEnabled = false;
+bool isPanning = false;
 
 void Drawstuff(Shader*);
 void ImGUIsetup(void);
@@ -103,6 +106,7 @@ int main(void)
     glDebugMessageCallback(MessageCallback, NULL);
     glfwSetCursorPosCallback(window, MouseCallback);
     glfwSetScrollCallback(window, ScrollCallback);
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     std::cout << glGetString(GL_VERSION) << std::endl;
@@ -240,12 +244,6 @@ void ProcessInput(GLFWwindow *window) {
     dT = glfwGetTime() - lastFrame;
     lastFrame = glfwGetTime();
 
-    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-        isMovementEnabled = !isMovementEnabled;
-        if(isMovementEnabled) glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        else glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cam.ProcessKeyboard(Camera_Movement::FORWARD, dT);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -268,12 +266,34 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     lastX = xpos;
     lastY = ypos;
 
-    if(isMovementEnabled)
+    if (isMovementEnabled)
         cam.ProcessMouseMovement(dx, dy);
+    if (isPanning)
+        cam.ProcessMousePan(dx, dy);
 }
 
 void ScrollCallback(GLFWwindow* window, double dx, double dy) {
     cam.ProcessMouseScroll(dy);
+}
+
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
+        isPanning = true;
+        isMovementEnabled = false;
+    }
+    else if (isPanning == true) {
+        isPanning = false;
+        if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) isMovementEnabled = true;
+    }
+
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        isMovementEnabled = true;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    }
+    else if (isMovementEnabled == true) {
+        isMovementEnabled = false;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 }
 
 void ImGUIsetup() {
