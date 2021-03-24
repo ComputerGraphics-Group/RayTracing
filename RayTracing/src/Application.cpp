@@ -261,12 +261,6 @@ void ProcessInput(GLFWwindow* window) {
     dT = glfwGetTime() - lastFrame;
     lastFrame = glfwGetTime();
 
-    if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-        isMovementEnabled = !isMovementEnabled;
-        if (isMovementEnabled) glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-        else glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cam.ProcessKeyboard(Camera_Movement::FORWARD, dT);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -302,7 +296,6 @@ void ScrollCallback(GLFWwindow* window, double dx, double dy) {
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
         isPanning = true;
-        isMovementEnabled = false;
     }
     else if (isPanning == true) {
         isPanning = false;
