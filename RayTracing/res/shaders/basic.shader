@@ -16,8 +16,6 @@ void main()
     gl_Position = projection * view * model * vec4(aPosition, 1.0);
     frag_pos = vec3(model * vec4(aPosition, 1.0));
     normal = mat3(transpose(inverse(model))) * aNormal;
-//    normal = vec3(projection * view * model * vec4(aNormal, 1.0));
-//    normal = aNormal;
 };
 
 #shader fragment
@@ -35,5 +33,4 @@ void main()
 {
     float diff = max( dot(normalize(normal), (normalize(light_pos - frag_pos)) ) , 0.0);
     color = u_color * diff;
-//    color = vec4(0.0, normal.z, 0.0, 1.0);
 };

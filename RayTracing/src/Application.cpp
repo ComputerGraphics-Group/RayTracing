@@ -107,7 +107,6 @@ int main(void)
     glfwSetCursorPosCallback(window, MouseCallback);
     glfwSetScrollCallback(window, ScrollCallback);
     glfwSetMouseButtonCallback(window, MouseButtonCallback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
@@ -277,23 +276,15 @@ void ScrollCallback(GLFWwindow* window, double dx, double dy) {
 }
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-    if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
+    if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
         isPanning = true;
-        isMovementEnabled = false;
-    }
-    else if (isPanning == true) {
+    else if (isPanning == true)
         isPanning = false;
-        if (glfwGetInputMode(window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED) isMovementEnabled = true;
-    }
 
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
         isMovementEnabled = true;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    }
-    else if (isMovementEnabled == true) {
+    else if (isMovementEnabled == true)
         isMovementEnabled = false;
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    }
 }
 
 void ImGUIsetup() {
