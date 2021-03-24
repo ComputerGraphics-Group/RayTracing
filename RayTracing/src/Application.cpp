@@ -56,6 +56,8 @@ int height = 1000;
 
 //Imgui controls
 float lightPos[3] = { 9,25,262 };
+int splits = 0;
+bool computed = true;
 
 //timing
 float dT = 0.0f;
@@ -67,8 +69,7 @@ float lastX = width / 2;
 float lastY = height / 2;
 bool firstMouse = true;
 bool isMovementEnabled = true;
-int splits = 0;
-bool computed = true;
+bool isPanning = false;
 
 void Drawstuff(Shader*);
 void ImGUIsetup(void);
@@ -87,7 +88,7 @@ int main(void)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(1000, 1000, "Ray Tracing", NULL, NULL);
+    window = glfwCreateWindow(width, height, "Ray Tracing", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
@@ -166,16 +167,16 @@ int main(void)
 
     std::vector<float> triangle_vertices;
     std::vector<int> triangle_indices;
-//    IcoSphere ico_sphere(splits);
-//   ico_sphere.generateSphere(triangle_indices, triangle_vertices);
-    Cone cone(100, 50, splits);
-    cone.generate(triangle_indices, triangle_vertices);
+    IcoSphere ico_sphere(splits);
+    ico_sphere.generateSphere(triangle_indices, triangle_vertices);
+//    Cone cone(100, 50, splits);
+//    cone.generate(triangle_indices, triangle_vertices);
     VertexArray va;
     VertexBuffer vb((const unsigned int*)triangle_vertices.data(), triangle_vertices.size() * sizeof(float));
 
     VertexBufferLayout layout;
     layout.push<float>(3);
-//    layout.push<float>(3);
+    layout.push<float>(3);
     va.addBuffer(vb, layout);
 
     IndexBuffer ib((const unsigned int*)triangle_indices.data(), triangle_indices.size());
@@ -205,8 +206,10 @@ int main(void)
         {
             triangle_indices.clear();
             triangle_vertices.clear();
-            cone.setParams(100, 50, splits);
-            cone.generate(triangle_indices, triangle_vertices);
+            ico_sphere.setSplits(splits);
+            ico_sphere.generateSphere(triangle_indices, triangle_vertices);
+//            cone.setParams(100, 50, splits);
+//            cone.generate(triangle_indices, triangle_vertices);
             vb.update((const unsigned int*)triangle_vertices.data(), triangle_vertices.size() * sizeof(float));
             ib.update((const unsigned int*)triangle_indices.data(), triangle_indices.size());
             computed = true;
@@ -288,10 +291,29 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
 
     if (isMovementEnabled)
         cam.ProcessMouseMovement(dx, dy);
+    if (isPanning)
+        cam.ProcessMousePan(dx, dy);
 }
 
 void ScrollCallback(GLFWwindow* window, double dx, double dy) {
     cam.ProcessMouseScroll(dy);
+}
+
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS) {
+        isPanning = true;
+        isMovementEnabled = false;
+    }
+    else if (isPanning == true) {
+        isPanning = false;
+    }
+
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+        isMovementEnabled = true;
+    }
+    else if (isMovementEnabled == true) {
+        isMovementEnabled = false;
+    }
 }
 
 void ImGUIsetup() {
@@ -308,7 +330,7 @@ void ImGUIsetup() {
             computed = false;
         }
         ImGui::SameLine();
-        if (ImGui::Button("Decrease splits"))
+        if (ImGui::Button("Decrease splits") && splits > 0)
         {
             splits--;
             computed = false;

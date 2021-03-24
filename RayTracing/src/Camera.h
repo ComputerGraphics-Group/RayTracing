@@ -34,7 +34,10 @@ public:
 
 	float MovementSpeed;
 	float MouseSensitivity;
+	float PanSensitivity;
 	float Zoom;
+
+	bool IsPanning;
 
 	Camera(vec3 position, vec3 up);
 
@@ -45,6 +48,8 @@ public:
 	void ProcessMouseMovement(float dx, float dy, GLboolean constrainPitch = true);
 
 	void ProcessMouseScroll(float dy);
+
+	void ProcessMousePan(float dx, float dy);
 
 	void SendPosition();
 

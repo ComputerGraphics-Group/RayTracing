@@ -34,6 +34,6 @@ in vec3 frag_pos;
 void main()
 {
     float diff = max( dot(normalize(normal), (normalize(light_pos - frag_pos)) ) , 0.0);
-//    color = u_color * diff;
-    color = u_color;
+    color = u_color * diff;
+//    color = u_color;
 };
