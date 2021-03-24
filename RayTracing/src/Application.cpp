@@ -48,6 +48,8 @@ void GLAPIENTRY MessageCallback(
 
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 
+void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+
 void ScrollCallback(GLFWwindow* window, double dx, double dy);
 
 //Window
@@ -68,7 +70,7 @@ Camera cam(glm::vec3(0, 0, 500), glm::vec3(0, 1, 0));
 float lastX = width / 2;
 float lastY = height / 2;
 bool firstMouse = true;
-bool isMovementEnabled = true;
+bool isMovementEnabled = false;
 bool isPanning = false;
 
 void Drawstuff(Shader*);
@@ -109,8 +111,8 @@ int main(void)
     glDebugMessageCallback(MessageCallback, NULL);
     glfwSetCursorPosCallback(window, MouseCallback);
     glfwSetScrollCallback(window, ScrollCallback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
+    glfwSetMouseButtonCallback(window, MouseButtonCallback);
+    
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     float points[] = {
