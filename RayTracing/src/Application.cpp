@@ -48,6 +48,8 @@ void ScrollCallback(GLFWwindow* window, double dx, double dy);
 
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 //Window
 int width = 1000;
 int height = 1000;
@@ -107,6 +109,7 @@ int main(void)
     glfwSetCursorPosCallback(window, MouseCallback);
     glfwSetScrollCallback(window, ScrollCallback);
     glfwSetMouseButtonCallback(window, MouseButtonCallback);
+    glfwSetKeyCallback(window, KeyCallback);
 
     std::cout << glGetString(GL_VERSION) << std::endl;
 
@@ -247,10 +250,7 @@ void ProcessInput(GLFWwindow *window) {
         cam.ProcessKeyboard(Camera_Movement::FORWARD, dT);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         cam.ProcessKeyboard(Camera_Movement::BACKWARD, dT);
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cam.ProcessKeyboard(Camera_Movement::LEFT, dT);
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cam.ProcessKeyboard(Camera_Movement::RIGHT, dT);
+
 
 }
 
@@ -266,7 +266,7 @@ void MouseCallback(GLFWwindow* window, double xpos, double ypos) {
     lastY = ypos;
 
     if (isMovementEnabled)
-        cam.ProcessMouseMovement(dx, dy);
+        cam.ProcessMouseMovement(dx, dy, 0);
     if (isPanning)
         cam.ProcessMousePan(dx, dy);
 }
@@ -285,6 +285,14 @@ void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
         isMovementEnabled = true;
     else if (isMovementEnabled == true)
         isMovementEnabled = false;
+}
+
+void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+    if (key == GLFW_KEY_A && action == GLFW_REPEAT)
+        cam.ProcessMouseMovement(0, 0, -10.0f);
+
+    if (key == GLFW_KEY_D && action == GLFW_REPEAT)
+        cam.ProcessMouseMovement(0, 0, 10.0f);
 }
 
 void ImGUIsetup() {

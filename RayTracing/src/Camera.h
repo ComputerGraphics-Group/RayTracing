@@ -18,6 +18,7 @@ enum class Camera_Movement {
 const float speed = 100.0f;
 const float yaw = -90.0f;
 const float pitch = 0.0f;
+const float roll = 90.0f;
 const float sensitivity = 0.1f;
 const float zoom = 45.0f;
 
@@ -31,6 +32,7 @@ public:
 
 	float Yaw;
 	float Pitch;
+	float Roll;
 
 	float MovementSpeed;
 	float MouseSensitivity;
@@ -45,7 +47,7 @@ public:
 
 	void ProcessKeyboard(Camera_Movement direction, float dT);
 
-	void ProcessMouseMovement(float dx, float dy, GLboolean constrainPitch = true);
+	void ProcessMouseMovement(float dx, float dy, float dz, GLboolean constrainPitch = true);
 
 	void ProcessMouseScroll(float dy);
 
