@@ -6,6 +6,7 @@ Camera::Camera(vec3 position = vec3(0, 0, 0), vec3 up = vec3(0, 1, 0)) {
 	WorldUp = up;
 	Yaw = yaw;
 	Pitch = pitch;
+	Roll = roll;
 	MovementSpeed = speed;
 	MouseSensitivity = sensitivity;
 	Zoom = zoom;
@@ -29,12 +30,14 @@ void Camera::ProcessKeyboard(Camera_Movement direction, float dT) {
 		Position += Right * vel;
 }
 
-void Camera::ProcessMouseMovement(float dx, float dy, GLboolean constrainPitch) {
+void Camera::ProcessMouseMovement(float dx, float dy, float dz, GLboolean constrainPitch) {
 	dx *= MouseSensitivity;
 	dy *= MouseSensitivity;
+	dz *= MouseSensitivity;
 
 	Yaw += dx;
 	Pitch += dy;
+	Roll += dz;
 
 	if (constrainPitch) {
 		if (Pitch > 89.0f) Pitch = 89.0f;
@@ -61,11 +64,17 @@ void Camera::SendPosition() {
 
 void Camera::updateCameraVectors() {
 	vec3 front;
-	front.x = cos(radians(Yaw)) * cos(radians(Pitch));
-	front.y = sin(radians(Pitch));
+	front.x = (cos(radians(Yaw)) * cos(radians(Pitch))) * sin(radians(Roll)) + sin(radians(Pitch)) * cos(radians(Roll));
+	front.y = -1 * (cos(radians(Yaw)) * cos(radians(Pitch))) * cos(radians(Roll)) + sin(radians(Pitch)) * sin(radians(Roll));
 	front.z = sin(radians(Yaw)) * cos(radians(Pitch));
 	Front = normalize(front);
 
-	Right = normalize(cross(Front, WorldUp));
+	vec3 newUp;
+	newUp.x = cos(radians(Roll));
+	newUp.y = sin(radians(Roll));
+	newUp.z = 0.0f;
+	newUp = normalize(newUp);
+
+	Right = normalize(cross(Front, newUp));
 	Up = normalize(cross(Right, Front));
 }

@@ -163,8 +163,10 @@
     <ClCompile Include="src\external\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="src\external\imgui\imgui_tables.cpp" />
     <ClCompile Include="src\external\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="src\IcoSphere.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\ModelLoader.cpp" />
     <ClCompile Include="src\Octasphere.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
     <ClCompile Include="src\Shader.cpp" />
@@ -605,8 +607,10 @@
     <ClInclude Include="src\external\imgui\imstb_rectpack.h" />
     <ClInclude Include="src\external\imgui\imstb_textedit.h" />
     <ClInclude Include="src\external\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\Grid.h" />
     <ClInclude Include="src\IcoSphere.h" />
     <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\ModelLoader.h" />
     <ClInclude Include="src\Octasphere.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\Shader.h" />

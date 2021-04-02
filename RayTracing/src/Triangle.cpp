@@ -30,7 +30,7 @@ void Triangle::tesselate(std::vector<int>& indices, std::vector<float>& points, 
         for (int j = i; j <= divisions; ++j)
         {
             vecb.normalize(100).pushIntoVector(points);      //Vertex
-            vecb.normalize(1).pushIntoVector(points);        //Normal
+//            vecb.normalize(1).pushIntoVector(points);        //Normal
             vecb = vecb.addVec(incrb);
         }
         veca = veca.addVec(incra);
