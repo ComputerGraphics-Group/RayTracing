@@ -293,7 +293,7 @@ int main(void)
         renderer.draw(vag, ibg, shader);
 
         //octasphere
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        /*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         model = glm::translate(model, glm::vec3(-150, 100, -100));        
         shader.setUniformMat4f("model", model);
         shader.setUniform4f("u_color", 1.0, 1.0f, 0.0f, 1.0f);
@@ -329,24 +329,24 @@ int main(void)
         glEnable(GL_POLYGON_OFFSET_LINE);
         glPolygonOffset(-1.f, -1.f);
         shader.setUniform4f("u_color", 1.0, 0.0f, 0.0f, 1.0f);
-        renderer.draw(vac, ibc, shader);
+        renderer.draw(vac, ibc, shader);*/
 
         ////cow
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        //model = glm::translate(model, glm::vec3(0, 180, 0));
-        //model = glm::scale(model, glm::vec3(50, 50, 50));
-        //shader.setUniformMat4f("model", model);
-        //shader.setUniform4f("u_color", 1.0, 1.0f, 0.0f, 1.0f);
-        //renderer.draw(vacow, ibcow, shader);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        model = glm::translate(model, glm::vec3(0, 180, 0));
+        model = glm::scale(model, glm::vec3(0.25, 0.25, 0.25));
+        shader.setUniformMat4f("model", model);
+        shader.setUniform4f("u_color", 1.0, 1.0f, 0.0f, 1.0f);
+        renderer.draw(vacow, ibcow, shader);
 
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        //glEnable(GL_POLYGON_OFFSET_LINE);
-        //glPolygonOffset(-1.f, -1.f);
-        //shader.setUniform4f("u_color", 1.0, 0.0f, 0.0f, 1.0f);
-        //renderer.draw(vacow, ibcow, shader);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glEnable(GL_POLYGON_OFFSET_LINE);
+        glPolygonOffset(-1.f, -1.f);
+        shader.setUniform4f("u_color", 1.0, 0.0f, 0.0f, 1.0f);
+        renderer.draw(vacow, ibcow, shader);
 
         //teddy
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        /*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         model = glm::translate(model, glm::vec3(0, 300, -300));
         model = glm::scale(model, glm::vec3(10, 10, 10));
         shader.setUniformMat4f("model", model);
@@ -357,7 +357,7 @@ int main(void)
         glEnable(GL_POLYGON_OFFSET_LINE);
         glPolygonOffset(-1.f, -1.f);
         shader.setUniform4f("u_color", 1.0, 0.0f, 0.0f, 1.0f);
-        renderer.draw(vateddy, ibteddy, shader);
+        renderer.draw(vateddy, ibteddy, shader);*/
 
         ImGUIsetup();
 
