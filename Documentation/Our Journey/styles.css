@@ -81,7 +81,7 @@ img {
 
 .one-line-code .image {
   width: 950px;
-  height: 170px;
+  height: auto;
 }
 
 .one-line-code img {

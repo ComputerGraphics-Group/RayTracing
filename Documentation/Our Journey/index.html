@@ -111,6 +111,47 @@
       The mechanism of movement is simple: instead of moving a physical camera or viewport around, you simply move the entire world around your camera. That involves changing the world angles and directions based 
       on your input. The way we achieved this is to make a Camera class which stores every single datapoint we need for a Camera to function such as direction vectors and the 3 main angles - Yaw, Pitch and Roll. Then
       we make a driver function that continuously updates these vectors every frame of input.
+      <div class='one-line-code'>
+        <div class='image'>
+          <img src="cam1.png">
+        </div>
+      </div>
+      Now we simply make GL callbacks to change each appropriate variable as we intend. For back and forth movement, we use the W and S keys (note that we do not use the A and D keys for left
+      and right movement: the reason for this is apparent later). We also add a scroll feature for zooming in and out.
+      <div class='one-line-code'>
+        <div class='image'>
+          <img src="cam2.png">
+        </div>
+      </div>
+      Then we make a GL mouse callback to check for the middle click button and mouse movement when it is active for panning the mouse, which moves the camera across the plane parallel to the
+      viewport (this is why A and D are not implemented for left and right movement). If middle click is not active, right click rotates the camera instead.
+      <div class='one-line-code'>
+        <div class='image'>
+          <img src="cam3.png">
+        </div>
+      </div>
+      Finally we make a special function for A and D to roll the camera. This function is normally a questionable one as it is barely used for anything, which is why most 3D modelling tools never
+      implement it. However it's sometimes a useful tool to use.
+      <div class='one-line-code'>
+        <div class='image'>
+          <img src="cam4.png">
+        </div>
+      </div>
+      Now, we can finally see these functions in action. This is what moving back and forth looks like...
+      <div class="image">
+        <img src="cam5.gif">
+        <label>Back and forth</label>
+      </div>
+      This is panning and rotating the camera...
+      <div class="image">
+        <img src="cam6.gif">
+        <label>Panning and rotation</label>
+      </div>
+      And finally, this is the roll.
+      <div class="image">
+        <img src="cam7.gif">
+        <label>Rolling</label>
+      </div>
     </div>
   </div>
 </body>
