@@ -5,6 +5,12 @@
 #include <string>
 #include <sstream>
 
+/// <summary>
+/// Function to load the model
+/// </summary>
+/// <param name="filepath">The path of the .obj file to be loaded</param>
+/// <param name="indices">The vector into which the function pushes the indices</param>
+/// <param name="points">The vector into which the function pushes the vertices</param>
 void ModelLoader::loadModel(const std::string& filepath, std::vector<int>& indices, std::vector<float>& points)
 {
     std::ifstream stream(filepath);

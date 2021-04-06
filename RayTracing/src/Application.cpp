@@ -257,7 +257,7 @@ int main(void)
 
     std::vector<float> cone_vertices;
     std::vector<int> cone_indices;
-    Cone cone(100, 50, 0);
+    Cone cone(500, 50, 0);
     cone.generate(cone_indices, cone_vertices);
     VertexArray vac;
     VertexBuffer vbc((const unsigned int*)cone_vertices.data(), cone_vertices.size() * sizeof(float));
@@ -305,7 +305,7 @@ int main(void)
             
             cone_indices.clear();
             cone_vertices.clear();
-            cone.setParams(100, 50, splits);
+            cone.setParams(500, 50, splits);
             cone.generate(cone_indices, cone_vertices);
             vbc.update((const unsigned int*)cone_vertices.data(), cone_vertices.size() * sizeof(float));
             ibc.update((const unsigned int*)cone_indices.data(), cone_indices.size());
@@ -322,7 +322,7 @@ int main(void)
         renderer.draw(vag, ibg, shader);
 
         //octasphere
-        /*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         model = glm::translate(model, glm::vec3(-150, 100, -100));        
         shader.setUniformMat4f("model", model);
         shader.setUniform4f("u_color", 1.0, 1.0f, 0.0f, 1.0f);
@@ -358,12 +358,12 @@ int main(void)
         glEnable(GL_POLYGON_OFFSET_LINE);
         glPolygonOffset(-1.f, -1.f);
         shader.setUniform4f("u_color", 1.0, 0.0f, 0.0f, 1.0f);
-        renderer.draw(vac, ibc, shader);*/
+        renderer.draw(vac, ibc, shader);
 
-        ////cow
+        //cow
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        model = glm::translate(model, glm::vec3(0, 180, 0));
-        model = glm::scale(model, glm::vec3(0.25, 0.25, 0.25));
+        model = glm::translate(model, glm::vec3(-500, 80, 0));
+        model = glm::scale(model, glm::vec3(50, 50, 50));
         shader.setUniformMat4f("model", model);
         shader.setUniform4f("u_color", 1.0, 1.0f, 0.0f, 1.0f);
         renderer.draw(vacow, ibcow, shader);
@@ -375,9 +375,9 @@ int main(void)
         renderer.draw(vacow, ibcow, shader);
 
         //teddy
-        /*glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        model = glm::translate(model, glm::vec3(0, 300, -300));
-        model = glm::scale(model, glm::vec3(10, 10, 10));
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        model = glm::translate(model, glm::vec3(0, 3.65, 0));
+        model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
         shader.setUniformMat4f("model", model);
         shader.setUniform4f("u_color", 1.0, 1.0f, 0.0f, 1.0f);
         renderer.draw(vateddy, ibteddy, shader);
@@ -386,7 +386,7 @@ int main(void)
         glEnable(GL_POLYGON_OFFSET_LINE);
         glPolygonOffset(-1.f, -1.f);
         shader.setUniform4f("u_color", 1.0, 0.0f, 0.0f, 1.0f);
-        renderer.draw(vateddy, ibteddy, shader);*/
+        renderer.draw(vateddy, ibteddy, shader);
 
         ImGUIsetup();
 
