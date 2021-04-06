@@ -48,12 +48,24 @@ void GLAPIENTRY MessageCallback(
 
 }
 
+/// <summary>
+/// GL callback to process mouse movement
+/// </summary>
 void MouseCallback(GLFWwindow* window, double xpos, double ypos);
 
+/// <summary>
+/// GL callback to process mouse button events
+/// </summary>
 void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
 
+/// <summary>
+/// GL callback to process mouse scroll
+/// </summary>
 void ScrollCallback(GLFWwindow* window, double dx, double dy);
 
+/// <summary>
+/// GL callback to process key press events
+/// </summary>
 void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 //Window
@@ -77,10 +89,27 @@ bool firstMouse = true;
 bool isMovementEnabled = false;
 bool isPanning = false;
 
-void Drawstuff(Shader*, glm::mat4 model);
-void ImGUIsetup(void);
-void ProcessInput(GLFWwindow*);
+/// <summary>
+/// Handles drawing of models and updating the perspective, view and model matrices
+/// </summary>
+/// <param name="shader">the shader in use</param>
+/// <param name="model">the model matrix to be used</param>
+void Drawstuff(Shader* shader, glm::mat4 model);
 
+/// <summary>
+/// The setup function for ImGUI to display debug info and variables
+/// </summary>
+void ImGUIsetup(void);
+
+/// <summary>
+/// Processes keyboard input for certain tasks
+/// </summary>
+/// <param name="window">The current window in use</param>
+void ProcessInput(GLFWwindow* window);
+
+/// <summary>
+/// The main function where all important functions are executed
+/// </summary>
 int main(void)
 {
     GLFWwindow* window;
