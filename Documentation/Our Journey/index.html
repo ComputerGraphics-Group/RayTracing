@@ -28,27 +28,79 @@
       Moving to 3D
     </div>
     <div class="content">
-      <div>
-        We already tried out making primitive triangles in a three-dimensional setting, so we decided to start out with a cube due to its simplicity. We simply needed to set the appropriate vertices and enable z-buffer depth testing
-        for a correct model to be displayed.
+      We already tried out making primitive triangles in a three-dimensional setting, so we decided to start out with a cube due to its simplicity. We simply needed to set the appropriate vertices and enable z-buffer depth testing
+      for a correct model to be displayed.
+      <div class="image">
+        <img src="cubeFirst.png">
+        <div class="label">
+          Primitive cube using triangles
+        </div>
       </div>
-      <!--Image here-->
-      <div>
-        By all accounts this is pretty boring, so we decided to spice it up with some color.
+      This is a 3D object but it doesn't look that way yet. We can apply tranformation matrices, specifically rotation matrices, to make it turn and expose it's "3D-ness".
+      <div class="image">
+        <img src="cube.png">
+        <div class="label">
+          Cube rotated
+        </div>
       </div>
-      <!--Image here-->
-      <div>
-        Now we can try out some more exotic shapes and angles.
+      By this point we were already getting tired of manually changing the rotation matrices on every compile. To remedy this we decided to take the assistance of a useful tool called ImGUI
+      that would allow us to adjust values in realtime in a GUI inspector. This was a great move on our part and it remained useful through the rest of the project.
+      <div class="image">
+        <img src="cubeRotating.gif">
+        <div class="label">
+          Cube with live rotation about the 3 axes
+        </div>
       </div>
-      <!--Image here-->
-      <div>
-        By this point we were already getting tired of seeing the same boring angle without actually seeing the 3D object fully. To remedy this we decided to take the assistance of a useful tool called ImGUI
-        that would allow us to adjust values in realtime in a GUI inspector. This was a great move on our part and it remained useful through the rest of the project.
+      The next primitive we rendered was a sphere. One approach to rendering this is to:<br>1) Render an Octagon
+      <div class="image">
+        <img src="octagonRotating.gif">
+        <div class="label">
+          Octagon
+        </div>
       </div>
-      <!--Image here-->
-      <div>
-        Now that that was done, we decided to start off with some good camera actions to interact with the scene properly.
+      <br>2) Tessellate the surfaces
+      <div class="image">
+        <img src="octagonTessellatedRotating.gif">
+        <div class="label">
+          Octagon tessellated
+        </div>
       </div>
+      <br>3) Normalize all the vertices to be a fixed distance away from the centre
+      <div class="image">
+        <img src="octagonTessellatedNormalizedRotating.gif">
+        <div class="label">
+          Octagon tessellated and normalized a.k.a Octasphere
+        </div>
+      </div>
+      Another method of generating a sphere is to tessellate an icosahedron instead of an octagon, known as an icosphere. This is the result:
+      <div class="image">
+        <img src="icoSphere.gif">
+        <div class="label">
+          Icosphere
+        </div>
+      </div>
+      The next primitive we rendered was a cone. For that, we needed to do 3 things again: <br>1) Render a square pyramid
+      <div class="image">
+        <img src="squarePyramid.gif">
+        <div class="label">
+          Square pyramid
+        </div>
+      </div>
+      <br>2) Split the faces vertically
+      <div class="image">
+        <img src="squarePyramidSplit.gif">
+        <div class="label">
+          Square pyramid with vertical splits
+        </div>
+      </div>
+      <br>3) Normalize the base vertices so that they are a fixed distance from the the centre of the base
+      <div class="image">
+        <img src="squarePyramidSplitNormalized.gif">
+        <div class="label">
+          Cone
+        </div>
+      </div>
+      Now that that was done, we decided to start off with some good camera actions to interact with the scene properly. 
     </div>
   </div>
   <div class='segment'>
@@ -56,13 +108,9 @@
       Camera movement and the projection/model/view system
     </div>
     <div class='content'>
-      <div>The mechanism of movement is simple: instead of moving a physical camera or viewport around, you simply move the entire world around your camera. That involves changing the world angles and directions based 
+      The mechanism of movement is simple: instead of moving a physical camera or viewport around, you simply move the entire world around your camera. That involves changing the world angles and directions based 
       on your input. The way we achieved this is to make a Camera class which stores every single datapoint we need for a Camera to function such as direction vectors and the 3 main angles - Yaw, Pitch and Roll. Then
       we make a driver function that continuously updates these vectors every frame of input.
-      </div>
-      <!--Image here-->
-      <div>
-      </div>
     </div>
   </div>
 </body>
